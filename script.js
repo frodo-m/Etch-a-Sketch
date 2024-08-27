@@ -1,43 +1,62 @@
-const container = document.querySelector("#container");
-const resizeBtn = document.querySelector("#resizeBtn");
-const changeColorBtn = document.querySelector("#changeColorBtn");
-const resetBtn = document.querySelector("#resetBtn");
+const container = document.querySelector('#container');
+const gridSizeInput = document.querySelector('#gridSize');
+const generateGridBtn = document.querySelector('#generateGridBtn')
+const resetBtn = document.querySelector('#resetBtn');
 
-// FUNC: remove the grids each time the create grid function is called
-const remGrids = () => {
-  
+
+const setGrids = (size) => {
+  // Clear the container safely
+  // Instead of container.innerHTML = '';
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
+  }
+
+  // Calculate the size of each square based on the container size
+  const squareSize = container.clientWidth / size;
+
+  // Generate the grid
+  for (let i = 0; i < size * size; i++) {
+    const square = document.createElement('div');
+    square.className = 'square';
+    square.style.width = `${squareSize}px`;
+    square.style.heigh = `${squareSize}px`;
+    container.appendChild(square);
+
+    // Hover effect
+    square.addEventListener('mouseover', (e) => {
+      square.classList.add('hovered');
+    });
+    container.appendChild(square);
+  }
+};
+
+
+const validateGridSize = () => {
+  let size = parseInt(gridSizeInput.value);
+
+  // Ensure the input validation
+  if (size < 2 || size > 100 || isNaN(size)) {
+    alert('Please enter a valid number between 2 and 100');
+    return;
+  }
+
+  setGrids(size);
 }
-  // select all the rows and columns
-  // remove rows and columns containers
 
-// FUNC: create grids inside the container
-const createGrids = (size) => {
-  // start a for loop iterating from 0 to the event input
-    // create row divs appending into the container
-    // give it row className
-    // another for loop iterating from 0 to the same event input
-      // create square divs appending to the container
-      // give it class square
-      // give it opacity 0.1;
-}
+const resetGrid = () => {
+  // Remove the hover effect
+  const squares = document.querySelectorAll('.square');
+  squares.forEach(square => {
+    square.classList.remove('hovered');
+  });
+};
+resetBtn.addEventListener('click', resetGrid);
 
-// EVENT: type: load, for the window js property, invoke the create grid function
-window.addEventListener('load', () => createGrids(16));
+// Event listener for the buttons
+gridSizeInput.addEventListener('change', validateGridSize);
 
-// FUNC: create opaque squares s
-  // create a variable holding color value;
-  // create a variable holding all the squares
-  // EVENT: mouseover 
-    // give its parameter style at var holding the color value
-    // get the current opacity and bent it to a variable
-    // change the opacity
-  
-// EVENT: trigger the random color function
-  // bend all the squares in a variable
-  
-// EVENT: reset the grids background
-  // prompt the userr for a value for the grid size
-  // bend that input inside a number variable
-  // invoke the create grid function
+// Set default grid size
 
-// EVENT: trigger the resize function
+
+window.onload = () => setGrids(16);
+
