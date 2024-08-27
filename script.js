@@ -1,12 +1,19 @@
 const container = document.querySelector('#container');
 const gridSizeInput = document.querySelector('#gridSize');
-const generateGridBtn = document.querySelector('#generateGridBtn')
+const generateGridBtn = document.querySelector('#generateGridBtn');
 const resetBtn = document.querySelector('#resetBtn');
 
+const getRandomColor = () => {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
 
 const setGrids = (size) => {
   // Clear the container safely
-  // Instead of container.innerHTML = '';
   while (container.firstChild) {
     container.removeChild(container.firstChild);
   }
@@ -19,18 +26,21 @@ const setGrids = (size) => {
     const square = document.createElement('div');
     square.className = 'square';
     square.style.width = `${squareSize}px`;
-    square.style.heigh = `${squareSize}px`;
-    container.appendChild(square);
+    square.style.height = `${squareSize}px`;
 
-    // Hover effect
+    // Add hover effect on mouseover
     square.addEventListener('mouseover', (e) => {
-      square.classList.add('hovered');
+      e.target.style.backgroundColor = getRandomColor();
+      let currentOpacity = parseFloat(e.target.style.opacity) || 0;
+      e.target.style.opacity = currentOpacity + 0.1;
     });
+
+
     container.appendChild(square);
   }
 };
 
-
+// Validate user input
 const validateGridSize = () => {
   let size = parseInt(gridSizeInput.value);
 
@@ -43,20 +53,19 @@ const validateGridSize = () => {
   setGrids(size);
 }
 
+// Remove the hover effect
 const resetGrid = () => {
-  // Remove the hover effect
   const squares = document.querySelectorAll('.square');
   squares.forEach(square => {
-    square.classList.remove('hovered');
+    square.style.backgroundColor = ''; // Reset background color
+    square.style.opacity = ''; // Reset opacity
   });
 };
+
 resetBtn.addEventListener('click', resetGrid);
 
 // Event listener for the buttons
 gridSizeInput.addEventListener('change', validateGridSize);
 
 // Set default grid size
-
-
 window.onload = () => setGrids(16);
-
